@@ -8,6 +8,9 @@ export const registerUser = async (req, res, next) => {
   if (!error.isEmpty()) return res.status(400).json({ errors: error.array() });
 
   const { fullname, email, password } = req.body;
+  
+    const isExist=await userModel.findOne({email});
+    if(isExist) return res.status(400).json('User Already Exist');
 
   const hashedPassword = await userModel.hashPassword(password);
 
@@ -18,7 +21,6 @@ export const registerUser = async (req, res, next) => {
     password: hashedPassword,
   });
 
-  console.log(user);
   const token = user.generateToken();
   res.status(201).json({ token, user });
 };
@@ -49,9 +51,9 @@ export const getUserProfile=(req,res,next)=>{
 }
 
 export const logoutUser=async (req,res)=>{
-  res.clearCookie('token')
   const token= req.cookies.token || req.headers.authorization.split(' ')[ 1 ];
-
+  
+  res.clearCookie('token')
   await blacklistTokenModel.create({token});
   res.status(200).json({message:"logged Out"})
 }

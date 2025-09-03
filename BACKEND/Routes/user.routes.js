@@ -14,7 +14,7 @@ router.post("/register",[
 
 router.post("/login",[
     body('email').isEmail().withMessage('Invalid email'),
-    body('password').isLength({min:5}).withMessage('password must be atleast 5 character long')
+    body('password').isLength({min:6}).withMessage('password must be atleast 5 character long')
 ],loginUser)
 
 router.get("/profile",authUser,getUserProfile)
