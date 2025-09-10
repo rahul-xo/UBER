@@ -1,24 +1,39 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom"; 
-
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { UserDataContext } from "../Context/UserContext";
 const LoginUser = () => {
   // State for email and password fields
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
+  const { setUserData } = useContext(UserDataContext);
+  const navigate=useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
     const formData = {
       email: user.email,
       password: user.password,
     };
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, formData);
+      if (response.status === 200) {
+        const data = response.data;
+        setUserData(data.user);
+        localStorage.setItem('token',data.token);
+        navigate('/home');
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center font-sans p-4">

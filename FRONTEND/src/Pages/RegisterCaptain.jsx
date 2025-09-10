@@ -9,6 +9,12 @@ const RegisterCaptain = () => {
     },
     email: "",
     password: "",
+    vehicleInfo: {
+      vehicleType: "",
+      vehiclePlate: "",
+      vehicleCapacity: "",
+      vehicleColor: "",
+    },
   });
 
   const handleChange = (e) => {
@@ -22,6 +28,19 @@ const RegisterCaptain = () => {
           [name]: value,
         },
       }));
+    } else if (
+      name === "vehicleType" ||
+      name === "vehiclePlate" ||
+      name === "vehicleCapacity" ||
+      name === "vehicleColor"
+    ) {
+      setCaptain((prev) => ({
+        ...prev,
+        vehicleInfo: {
+          ...prev.vehicleInfo,
+          [name]: value,
+        },
+      }));
     } else {
       setCaptain((prev) => ({
         ...prev,
@@ -32,11 +51,7 @@ const RegisterCaptain = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setCaptain({
-      fullName: { firstName: "", lastName: "" },
-      email: "",
-      password: "",
-    });
+    console.log("New captain registered:", captain);
   };
 
   return (
@@ -118,6 +133,91 @@ const RegisterCaptain = () => {
               onChange={handleChange}
               className="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 hover:border-indigo-400"
             />
+          </div>
+
+          <div>
+            <h2 className="text-lg font-semibold text-gray-700 mt-6 mb-2 border-t pt-4">
+              Vehicle Information
+            </h2>
+            <div className="space-y-4">
+              <div className="flex space-x-4">
+                <div className="w-1/2">
+                  <label
+                    htmlFor="vehicleType"
+                    className="block text-[15px] font-semibold text-gray-700 mb-1"
+                  >
+                    Vehicle Type
+                  </label>
+                  <select
+                    id="vehicleType"
+                    name="vehicleType"
+                    value={captain.vehicleInfo.vehicleType}
+                    onChange={handleChange}
+                    className="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 hover:border-indigo-400"
+                  >
+                    <option value="" disabled>
+                      Select
+                    </option>
+                    <option value="Car">Car</option>
+                    <option value="Bike">Bike</option>
+                    <option value="Auto">Auto</option>
+                  </select>
+                </div>
+                <div className="w-1/2">
+                  <label
+                    htmlFor="vehiclePlate"
+                    className="block text-[15px] font-semibold text-gray-700 mb-1"
+                  >
+                    Plate No.
+                  </label>
+                  <input
+                    id="vehiclePlate"
+                    name="vehiclePlate"
+                    type="text"
+                    placeholder="UP80XY1234"
+                    value={captain.vehicleInfo.vehiclePlate}
+                    onChange={handleChange}
+                    className="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 hover:border-indigo-400"
+                  />
+                </div>
+              </div>
+              <div className="flex space-x-4">
+                <div className="w-1/2">
+                  <label
+                    htmlFor="vehicleCapacity"
+                    className="block text-[15px] font-semibold text-gray-700 mb-1"
+                  >
+                    Capacity
+                  </label>
+                  <input
+                    id="vehicleCapacity"
+                    name="vehicleCapacity"
+                    type="number"
+                    placeholder="e.g., 4"
+                    value={captain.vehicleInfo.vehicleCapacity}
+                    onChange={handleChange}
+                    className="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 hover:border-indigo-400"
+                  />
+                </div>
+                <div className="w-1/2">
+                  <label
+                    htmlFor="vehicleColor"
+                    className="block text-[15px] font-semibold text-gray-700 mb-1"
+                  >
+                    Color
+                  </label>
+                  <input
+                    id="vehicleColor"
+                    name="vehicleColor"
+                    type="text"
+                    placeholder="e.g., Black"
+                    value={captain.vehicleInfo.vehicleColor}
+                    onChange={handleChange}
+                    className="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 hover:border-indigo-400"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
           <div>

@@ -1,24 +1,29 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { UserDataContext } from "../Context/UserContext";
 
 const RegisterUser = () => {
+  const {  setUserData } = useContext(UserDataContext);
   const [user, setUser] = useState({
-    fullName: {
-      firstName: "",
-      lastName: "",
+    fullname: {
+      firstname: "",
+      lastname: "",
     },
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "firstName" || name === "lastName") {
+    if (name === "firstname" || name === "lastname") {
       setUser((prev) => ({
         ...prev,
-        fullName: {
-          ...prev.fullName,
+        fullname: {
+          ...prev.fullname,
           [name]: value,
         },
       }));
@@ -30,10 +35,21 @@ const RegisterUser = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`,user);
+      if(response.status===201){
+        const data=response.data;
+        setUserData(data.user);
+        localStorage.setItem('token',data.token);
+        navigate('/home');
+      }
+    } catch (error) {
+      
+    }
     setUser({
-      fullName: { firstName: "", lastName: "" },
+      fullname: { firstname: "", lastname: "" },
       email: "",
       password: "",
     });
@@ -50,34 +66,34 @@ const RegisterUser = () => {
           <div className="flex space-x-4">
             <div className="w-1/2">
               <label
-                htmlFor="firstName"
+                htmlFor="firstname"
                 className="block text-[15px] font-semibold text-gray-700 mb-1"
               >
                 First Name
               </label>
               <input
-                id="firstName"
-                name="firstName"
+                id="firstname"
+                name="firstname"
                 type="text"
                 placeholder="John"
-                value={user.firstName}
+                value={user.fullname.firstname}
                 onChange={handleChange}
                 className="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 hover:border-indigo-400"
               />
             </div>
             <div className="w-1/2">
               <label
-                htmlFor="lastName"
+                htmlFor="lastname"
                 className="block text-[15px] font-semibold text-gray-700 mb-1"
               >
                 Last Name
               </label>
               <input
-                id="lastName"
-                name="lastName"
+                id="lastname"
+                name="lastname"
                 type="text"
                 placeholder="Doe"
-                value={user.lastName}
+                value={user.fullname.lastname}
                 onChange={handleChange}
                 className="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 hover:border-indigo-400"
               />
