@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
+import axios from 'axios';
+import { captainDataContext } from "../Context/captainContext";
+import { useNavigate } from "react-router-dom";
 
 const RegisterCaptain = () => {
-  const [captain, setCaptain] = useState({
-    fullName: {
-      firstName: "",
-      lastName: "",
+  const navigate=useNavigate();
+  const [captain,setCaptain] = useState({
+    fullname: {
+      firstname: "",
+      lastname: "",
     },
     email: "",
     password: "",
-    vehicleInfo: {
+    vehicle: {
       vehicleType: "",
       vehiclePlate: "",
       vehicleCapacity: "",
@@ -17,14 +21,16 @@ const RegisterCaptain = () => {
     },
   });
 
+  const {captainData,setCaptainData}=useContext(captainDataContext);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "firstName" || name === "lastName") {
+    if (name === "firstname" || name === "lastname") {
       setCaptain((prev) => ({
         ...prev,
-        fullName: {
-          ...prev.fullName,
+        fullname: {
+          ...prev.fullname,
           [name]: value,
         },
       }));
@@ -36,8 +42,8 @@ const RegisterCaptain = () => {
     ) {
       setCaptain((prev) => ({
         ...prev,
-        vehicleInfo: {
-          ...prev.vehicleInfo,
+        vehicle: {
+          ...prev.vehicle,
           [name]: value,
         },
       }));
@@ -49,9 +55,27 @@ const RegisterCaptain = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
-    console.log("New captain registered:", captain);
+    const Captain={
+      fullname: captain.fullname,
+      email: captain.email,
+      password: captain.password,
+      vehicle:{
+        vehicleType: captain.vehicle.vehicleType,
+        plate: captain.vehicle.vehiclePlate,
+        capacity: captain.vehicle.vehicleCapacity,
+        color: captain.vehicle.vehicleColor,
+      },
+    }
+
+    const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`,Captain);
+    if(response.status===201){
+      const data=response.data;
+      setCaptainData(data.captain);
+      localStorage.setItem("captainToken",data.token);
+      navigate('/captainDashboard'); 
+    }
   };
 
   return (
@@ -65,34 +89,34 @@ const RegisterCaptain = () => {
           <div className="flex space-x-4">
             <div className="w-1/2">
               <label
-                htmlFor="firstName"
+                htmlFor="firstname"
                 className="block text-[15px] font-semibold text-gray-700 mb-1"
               >
                 First Name
               </label>
               <input
-                id="firstName"
-                name="firstName"
+                id="firstname"
+                name="firstname"
                 type="text"
                 placeholder="John"
-                value={captain.fullName.firstName}
+                value={captain.fullname.firstname}
                 onChange={handleChange}
                 className="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 hover:border-indigo-400"
               />
             </div>
             <div className="w-1/2">
               <label
-                htmlFor="lastName"
+                htmlFor="lastname"
                 className="block text-[15px] font-semibold text-gray-700 mb-1"
               >
                 Last Name
               </label>
               <input
-                id="lastName"
-                name="lastName"
+                id="lastname"
+                name="lastname"
                 type="text"
                 placeholder="Doe"
-                value={captain.fullName.lastName}
+                value={captain.fullname.lastname}
                 onChange={handleChange}
                 className="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 hover:border-indigo-400"
               />
@@ -151,16 +175,16 @@ const RegisterCaptain = () => {
                   <select
                     id="vehicleType"
                     name="vehicleType"
-                    value={captain.vehicleInfo.vehicleType}
+                    value={captain.vehicle.vehicleType}
                     onChange={handleChange}
                     className="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 hover:border-indigo-400"
                   >
                     <option value="" disabled>
                       Select
                     </option>
-                    <option value="Car">Car</option>
-                    <option value="Bike">Bike</option>
-                    <option value="Auto">Auto</option>
+                    <option value="car">car</option>
+                    <option value="motorcycle">bike</option>
+                    <option value="auto">auto</option>
                   </select>
                 </div>
                 <div className="w-1/2">
@@ -175,7 +199,7 @@ const RegisterCaptain = () => {
                     name="vehiclePlate"
                     type="text"
                     placeholder="UP80XY1234"
-                    value={captain.vehicleInfo.vehiclePlate}
+                    value={captain.vehicle.vehiclePlate}
                     onChange={handleChange}
                     className="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 hover:border-indigo-400"
                   />
@@ -194,7 +218,7 @@ const RegisterCaptain = () => {
                     name="vehicleCapacity"
                     type="number"
                     placeholder="e.g., 4"
-                    value={captain.vehicleInfo.vehicleCapacity}
+                    value={captain.vehicle.vehicleCapacity}
                     onChange={handleChange}
                     className="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 hover:border-indigo-400"
                   />
@@ -211,7 +235,7 @@ const RegisterCaptain = () => {
                     name="vehicleColor"
                     type="text"
                     placeholder="e.g., Black"
-                    value={captain.vehicleInfo.vehicleColor}
+                    value={captain.vehicle.vehicleColor}
                     onChange={handleChange}
                     className="w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 hover:border-indigo-400"
                   />

@@ -5,7 +5,7 @@ export const captainDataContext=createContext();
 
 
 const CaptainContext=({children})=>{
-    const [captain,setCaptain]=useState(null);
+    const [captainData,setCaptainData]=useState(null);
     const [loading,setLoading]=useState(true);
     const [error,setError]=useState(null);
 
@@ -14,8 +14,8 @@ const CaptainContext=({children})=>{
     }
 
     const value={
-        captain,
-        setCaptain,
+        captainData,
+        setCaptainData,
         loading,
         setLoading,
         error,

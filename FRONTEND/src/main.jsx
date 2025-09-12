@@ -13,6 +13,8 @@ import UserContext from "./Context/UserContext.jsx";
 import UserProtectWrapper from "./Pages/UserProtectWrapper.jsx";
 import UserLogout from "./Pages/UserLogout.jsx";
 import CaptainContext from "./Context/captainContext.jsx";
+import CaptainDashboard from "./Pages/captainDashboard.jsx";
+import CaptainProtectWrapper from "./Pages/CaptainProtectWrapper.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -50,6 +52,10 @@ const router = createBrowserRouter([
         path: "/user/logout",
         element: <UserLogout />,
       },
+      {
+        path: "/captainDashboard",
+        element:<CaptainProtectWrapper><CaptainDashboard/></CaptainProtectWrapper>
+      }
     ],
   },
 ]);
